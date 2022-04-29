@@ -32,15 +32,15 @@ class Sprite {
     c.fillRect(this.position.x, this.position.y, this.width, this.height);
 
     //attack box
-    // if (this.isAttacking) {
-    c.fillStyle = `green`;
-    c.fillRect(
-      this.attackBox.position.x,
-      this.attackBox.position.y,
-      this.attackBox.width,
-      this.attackBox.height
-    );
-    // }
+    if (this.isAttacking) {
+      c.fillStyle = `green`;
+      c.fillRect(
+        this.attackBox.position.x,
+        this.attackBox.position.y,
+        this.attackBox.width,
+        this.attackBox.height
+      );
+    }
   }
 
   update() {
@@ -113,14 +113,19 @@ const keys = {
 };
 
 function rectangularCollission({ rectangle1, rectangle2 }) {
-  rectangle1.attackBox.position.x + rectangle1.attackBox.width >=
-    rectangle2.position.attackBox &&
+  if (
+    rectangle1.attackBox.position.x + rectangle1.attackBox.width >=
+      rectangle2.position.x &&
     rectangle1.attackBox.position.x <=
       rectangle2.position.x + rectangle2.width &&
     rectangle1.attackBox.position.y + rectangle1.attackBox.height >=
       rectangle2.position.y &&
-    player.attackBox.position.y <= rectangle2.position.y + rectangle2.height;
+    rectangle1.attackBox.position.y <= rectangle2.position.y + rectangle2.height
+  ) {
+    return true;
+  }
 }
+
 function animate() {
   c.fillStyle = `black`;
   window.requestAnimationFrame(animate);
@@ -144,10 +149,27 @@ function animate() {
   } else if (keys.ArrowRight.pressed && enemy.lastKey === `ArrowRight`) {
     enemy.velocity.x = 5;
   }
-
-  //detect for colission
-  if (player.isAttacking) {
+  //detect for player colission
+  if (
+    rectangularCollission({
+      rectangle1: player,
+      rectangle2: enemy,
+    }) &&
+    player.isAttacking
+  ) {
     player.isAttacking = false;
+    console.log(`player`);
+  }
+  //detect for enemy colission
+  if (
+    rectangularCollission({
+      rectangle1: enemy,
+      rectangle2: player,
+    }) &&
+    enemy.isAttacking
+  ) {
+    enemy.isAttacking = false;
+    console.log(`enemy`);
   }
 }
 animate();
@@ -171,7 +193,7 @@ window.addEventListener(`keydown`, (event) => {
         player.velocity.y = -20;
       }
       break;
-    case ` `:
+    case `s`:
       player.attack();
       break;
     //enemy keys
@@ -189,6 +211,9 @@ window.addEventListener(`keydown`, (event) => {
       if (enemy.position.y + enemy.height + enemy.velocity.y >= canvas.height) {
         enemy.velocity.y = -20;
       }
+      break;
+    case `ArrowDown`:
+      enemy.attack();
       break;
   }
 });
