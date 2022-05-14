@@ -1,5 +1,6 @@
 const canvas = document.querySelector(`canvas`);
 const c = canvas.getContext(`2d`);
+const displayText = document.querySelector(`#displayText`);
 
 canvas.width = 1024;
 canvas.height = 576;
@@ -16,6 +17,7 @@ class Sprite {
     this.height = 150;
     this.lastKey;
     this.colour = colour;
+    this.health = 100;
     this.attackBox = {
       position: {
         x: this.position.x,
@@ -126,6 +128,33 @@ function rectangularCollission({ rectangle1, rectangle2 }) {
   }
 }
 
+function determineWinner({ player, enemy, timerID }) {
+  clearTimeout(timerID);
+  timer = 0;
+  displayText.style.display = `flex`;
+  if (player.health === enemy.health) {
+    displayText.innerHTML = `Tie`;
+  } else if (player.health > enemy.health) {
+    displayText.innerHTML = `Player 1 Winner`;
+  } else {
+    displayText.innerHTML = `Player 2 Winner`;
+  }
+}
+
+let timer = 10;
+let timerID;
+function decreaseTimer() {
+  if (timer > 0) {
+    timerID = setTimeout(decreaseTimer, 1000);
+    timer--;
+    document.querySelector("#timer").innerHTML = timer;
+  }
+  if (timer === 0) {
+    determineWinner({ player, enemy });
+  }
+}
+decreaseTimer();
+
 function animate() {
   c.fillStyle = `black`;
   window.requestAnimationFrame(animate);
@@ -158,7 +187,8 @@ function animate() {
     player.isAttacking
   ) {
     player.isAttacking = false;
-    console.log(`player`);
+    enemy.health -= 20;
+    document.querySelector(`#enemyHealth`).style.width = enemy.health + `%`;
   }
   //detect for enemy colission
   if (
@@ -169,7 +199,11 @@ function animate() {
     enemy.isAttacking
   ) {
     enemy.isAttacking = false;
-    console.log(`enemy`);
+    player.health -= 20;
+    document.querySelector(`#playerHealth`).style.width = player.health + `%`;
+  }
+  if ((player.health <= 0) | (enemy.health <= 0)) {
+    determineWinner({ player, enemy, timerID });
   }
 }
 animate();
@@ -194,7 +228,7 @@ window.addEventListener(`keydown`, (event) => {
       }
       break;
     case `s`:
-      player.attack();
+      if (timer > 0) player.attack();
       break;
     //enemy keys
     case `ArrowRight`:
@@ -213,7 +247,7 @@ window.addEventListener(`keydown`, (event) => {
       }
       break;
     case `ArrowDown`:
-      enemy.attack();
+      if (timer > 0) enemy.attack();
       break;
   }
 });
