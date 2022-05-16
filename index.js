@@ -47,6 +47,20 @@ const player = new Fighter({
     x: 200,
     y: 157,
   },
+  sprites: {
+    idle: {
+      imageSrc: "./img/warriorSimon/Idle.png",
+      framesMax: 8,
+    },
+    run: {
+      imageSrc: "./img/warriorSimon/Run.png",
+      framesMax: 8,
+    },
+    jump: {
+      imageSrc: "./img/warriorSimon/Jump.png",
+      framesMax: 2,
+    },
+  },
 });
 
 const enemy = new Fighter({
@@ -95,9 +109,12 @@ function animate() {
   enemy.velocity.x = 0;
 
   //player movement
+  player.image = player.sprites.idle.image;
   if (keys.a.pressed && player.lastKey === `a`) {
     player.velocity.x = -5;
+    player.image = player.sprites.run.image;
   } else if (keys.d.pressed && player.lastKey === `d`) {
+    player.image = player.sprites.run.image;
     player.velocity.x = 5;
   }
 
@@ -153,7 +170,8 @@ window.addEventListener(`keydown`, (event) => {
         player.position.y + player.height + player.velocity.y >=
         canvas.height - 45
       ) {
-        player.velocity.y = -20;
+        player.image = player.sprites.run.image;
+        player.velocity.y = -17;
       }
       break;
     case `s`:
@@ -175,7 +193,7 @@ window.addEventListener(`keydown`, (event) => {
         enemy.position.y + enemy.height + enemy.velocity.y >=
         canvas.height - 45
       ) {
-        enemy.velocity.y = -20;
+        enemy.velocity.y = -17;
       }
       break;
     case `ArrowDown`:
