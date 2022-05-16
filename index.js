@@ -16,6 +16,15 @@ const background = new Sprite({
   },
   imageSrc: `./img/background.png`,
 });
+const shop = new Sprite({
+  position: {
+    x: 635,
+    y: 188,
+  },
+  imageSrc: `./img/decorations/shop_anim.png`,
+  scale: 1,
+  framesMax: 6,
+});
 
 const player = new Fighter({
   position: {
@@ -64,45 +73,6 @@ const keys = {
   },
 };
 
-function rectangularCollission({ rectangle1, rectangle2 }) {
-  if (
-    rectangle1.attackBox.position.x + rectangle1.attackBox.width >=
-      rectangle2.position.x &&
-    rectangle1.attackBox.position.x <=
-      rectangle2.position.x + rectangle2.width &&
-    rectangle1.attackBox.position.y + rectangle1.attackBox.height >=
-      rectangle2.position.y &&
-    rectangle1.attackBox.position.y <= rectangle2.position.y + rectangle2.height
-  ) {
-    return true;
-  }
-}
-
-function determineWinner({ player, enemy, timerID }) {
-  clearTimeout(timerID);
-  timer = 0;
-  displayText.style.display = `flex`;
-  if (player.health === enemy.health) {
-    displayText.innerHTML = `Tie`;
-  } else if (player.health > enemy.health) {
-    displayText.innerHTML = `Player 1 Winner`;
-  } else {
-    displayText.innerHTML = `Player 2 Winner`;
-  }
-}
-
-let timer = 10;
-let timerID;
-function decreaseTimer() {
-  if (timer > 0) {
-    timerID = setTimeout(decreaseTimer, 1000);
-    timer--;
-    document.querySelector("#timer").innerHTML = timer;
-  }
-  if (timer === 0) {
-    determineWinner({ player, enemy });
-  }
-}
 decreaseTimer();
 
 function animate() {
@@ -110,6 +80,7 @@ function animate() {
   window.requestAnimationFrame(animate);
   c.fillRect(0, 0, canvas.width, canvas.height);
   background.update();
+  shop.update();
   player.update();
   enemy.update();
 
@@ -173,7 +144,7 @@ window.addEventListener(`keydown`, (event) => {
     case `w`:
       if (
         player.position.y + player.height + player.velocity.y >=
-        canvas.height
+        canvas.height - 45
       ) {
         player.velocity.y = -20;
       }
@@ -193,7 +164,10 @@ window.addEventListener(`keydown`, (event) => {
       break;
 
     case `ArrowUp`:
-      if (enemy.position.y + enemy.height + enemy.velocity.y >= canvas.height) {
+      if (
+        enemy.position.y + enemy.height + enemy.velocity.y >=
+        canvas.height - 45
+      ) {
         enemy.velocity.y = -20;
       }
       break;
