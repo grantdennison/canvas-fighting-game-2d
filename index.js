@@ -40,6 +40,13 @@ const player = new Fighter({
     x: 0,
     y: 0,
   },
+  imageSrc: "./img/warriorSimon/Idle.png",
+  framesMax: 8,
+  scale: 2.5,
+  offset: {
+    x: 200,
+    y: 157,
+  },
 });
 
 const enemy = new Fighter({
@@ -82,7 +89,7 @@ function animate() {
   background.update();
   shop.update();
   player.update();
-  enemy.update();
+  // enemy.update();
 
   player.velocity.x = 0;
   enemy.velocity.x = 0;
