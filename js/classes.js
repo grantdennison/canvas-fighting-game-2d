@@ -115,6 +115,8 @@ class Fighter extends Sprite {
 
     this.position.x += this.velocity.x;
     this.position.y += this.velocity.y;
+
+    // gravity funtion
     if (this.position.y + this.height + this.velocity.y >= canvas.height - 45) {
       this.velocity.y = 0;
     } else {
@@ -125,12 +127,27 @@ class Fighter extends Sprite {
     this.switchSprite(`attack1`);
     this.isAttacking = true;
   }
+
+  takeHit() {
+    this.switchSprite(`takeHit`);
+    this.health -= 20;
+  }
+
   switchSprite(sprite) {
+    // overiding all other animation when attacked
     if (
       this.image === this.sprites.attack1.image &&
       this.framesCurrent < this.sprites.attack1.framesMax - 1
     )
       return;
+
+    //overide when fighter get hit
+    if (
+      this.image === this.sprites.takeHit.image &&
+      this.framesCurrent < this.sprites.takeHit.framesMax - 1
+    )
+      return;
+
     switch (sprite) {
       case `idle`:
         if (this.image !== this.sprites.idle.image) {

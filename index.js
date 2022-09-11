@@ -63,6 +63,10 @@ const player = new Fighter({
     attack1: {
       imageSrc: "./img/warriorSimon/Attack1.png",
       framesMax: 6
+    },
+    takeHit: {
+      imageSrc: "./img/warriorSimon/Take Hit - white silhouette.png",
+      framesMax: 4
     }
   },
   attackBox: {
@@ -109,11 +113,11 @@ const enemy = new Fighter({
     attack1: {
       imageSrc: "./img/warriorNicole/Attack1.png",
       framesMax: 4
+    },
+    takeHit: {
+      imageSrc: "./img/warriorNicole/Take hit.png",
+      framesMax: 3
     }
-  },
-  takeHit: {
-    imageSrc: `.img/warriorNicole/Take hit.png`,
-    framesMax: 3
   },
   attackBox: {
     offset: { x: -180, y: 40 },
@@ -179,7 +183,7 @@ function animate() {
     enemy.switchSprite(`jump`);
   }
 
-  //detect for player colission
+  //detect for player colission && enemy gets fit
   if (
     rectangularCollission({
       rectangle1: player,
@@ -188,15 +192,17 @@ function animate() {
     player.isAttacking &&
     player.framesCurrent === 4
   ) {
+    enemy.takeHit();
     player.isAttacking = false;
-    enemy.health -= 20;
+
     document.querySelector(`#enemyHealth`).style.width = enemy.health + `%`;
   }
   // if player misses
   if (player.isAttacking && player.framesCurrent === 4) {
     player.isAttacking = false;
   }
-  //detect for enemy colission
+
+  //detect for enemy colission && player take hit
   if (
     rectangularCollission({
       rectangle1: enemy,
@@ -205,8 +211,9 @@ function animate() {
     enemy.isAttacking &&
     enemy.framesCurrent === 2
   ) {
+    player.takeHit();
     enemy.isAttacking = false;
-    player.health -= 20;
+
     document.querySelector(`#playerHealth`).style.width = player.health + `%`;
   }
   // enemy misses
