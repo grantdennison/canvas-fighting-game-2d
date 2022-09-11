@@ -67,6 +67,10 @@ const player = new Fighter({
     takeHit: {
       imageSrc: "./img/warriorSimon/Take Hit - white silhouette.png",
       framesMax: 4
+    },
+    death: {
+      imageSrc: "./img/warriorSimon/Death.png",
+      framesMax: 6
     }
   },
   attackBox: {
@@ -117,6 +121,10 @@ const enemy = new Fighter({
     takeHit: {
       imageSrc: "./img/warriorNicole/Take hit.png",
       framesMax: 3
+    },
+    death: {
+      imageSrc: "./img/warriorNicole/Death.png",
+      framesMax: 7
     }
   },
   attackBox: {
