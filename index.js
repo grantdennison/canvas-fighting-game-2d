@@ -225,7 +225,6 @@ function animate() {
     document.querySelector(`#playerHealth`).style.width = player.health + `%`;
   }
   // enemy misses
-  // if player misses
   if (enemy.isAttacking && enemy.framesCurrent === 2) {
     enemy.isAttacking = false;
   }
@@ -237,50 +236,56 @@ function animate() {
 animate();
 
 window.addEventListener(`keydown`, (event) => {
-  switch (event.key) {
-    // player keys
-    case `d`:
-      keys.d.pressed = true;
-      player.lastKey = `d`;
-      break;
-    case `a`:
-      keys.a.pressed = true;
-      player.lastKey = `a`;
-      break;
-    case `w`:
-      if (
-        player.position.y + player.height + player.velocity.y >=
-        canvas.height - 45
-      ) {
-        player.image = player.sprites.run.image;
-        player.velocity.y = -17;
-      }
-      break;
-    case `s`:
-      if (timer > 0) player.attack();
-      break;
-    //enemy keys
-    case `ArrowRight`:
-      keys.ArrowRight.pressed = true;
-      enemy.lastKey = `ArrowRight`;
-      break;
+  if (!player.dead) {
+    switch (event.key) {
+      // player keys
+      case `d`:
+        keys.d.pressed = true;
+        player.lastKey = `d`;
+        break;
+      case `a`:
+        keys.a.pressed = true;
+        player.lastKey = `a`;
+        break;
+      case `w`:
+        if (
+          player.position.y + player.height + player.velocity.y >=
+          canvas.height - 45
+        ) {
+          player.image = player.sprites.run.image;
+          player.velocity.y = -17;
+        }
+        break;
+      case `s`:
+        if (timer > 0) player.attack();
+        break;
+    }
+  }
+  if (!enemy.dead) {
+    switch (event.key) {
+      //enemy keys
+      case `ArrowRight`:
+        keys.ArrowRight.pressed = true;
+        enemy.lastKey = `ArrowRight`;
+        break;
 
-    case `ArrowLeft`:
-      keys.ArrowLeft.pressed = true;
-      enemy.lastKey = `ArrowLeft`;
-      break;
+      case `ArrowLeft`:
+        keys.ArrowLeft.pressed = true;
+        enemy.lastKey = `ArrowLeft`;
+        break;
 
-    case `ArrowUp`:
-      if (
-        enemy.position.y + enemy.height + enemy.velocity.y >=
-        canvas.height - 45
-      ) {
-        enemy.velocity.y = -17;
-      }
-      break;
-    case `ArrowDown`:
-      if (timer > 0) enemy.attack();
-      break;
+      case `ArrowUp`:
+        if (
+          enemy.position.y + enemy.height + enemy.velocity.y >=
+          canvas.height - 45
+        ) {
+          enemy.velocity.y = -17;
+        }
+        break;
+      case `ArrowDown`:
+        if (timer > 0) enemy.attack();
+        break;
+    }
   }
 });
 window.addEventListener(`keyup`, (event) => {
