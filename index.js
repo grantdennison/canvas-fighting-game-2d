@@ -12,90 +12,129 @@ const gravity = 0.7;
 const background = new Sprite({
   position: {
     x: 0,
-    y: 0,
+    y: 0
   },
-  imageSrc: `./img/background.png`,
+  imageSrc: `./img/background.png`
 });
 const shop = new Sprite({
   position: {
     x: 635,
-    y: 188,
+    y: 188
   },
   imageSrc: `./img/decorations/shop_anim.png`,
   scale: 1,
-  framesMax: 6,
+  framesMax: 6
 });
 
 const player = new Fighter({
   position: {
     x: 0,
-    y: 0,
+    y: 0
   },
   velocity: {
     x: 0,
-    y: 10,
+    y: 10
   },
   colour: `red`,
   offset: {
     x: 0,
-    y: 0,
+    y: 0
   },
   imageSrc: "./img/warriorSimon/Idle.png",
   framesMax: 8,
   scale: 2.5,
   offset: {
     x: 200,
-    y: 157,
+    y: 157
   },
   sprites: {
     idle: {
       imageSrc: "./img/warriorSimon/Idle.png",
-      framesMax: 8,
+      framesMax: 8
     },
     run: {
       imageSrc: "./img/warriorSimon/Run.png",
-      framesMax: 8,
+      framesMax: 8
     },
     jump: {
       imageSrc: "./img/warriorSimon/Jump.png",
-      framesMax: 2,
+      framesMax: 2
     },
     attack1: {
       imageSrc: "./img/warriorSimon/Attack1.png",
-      framesMax: 6,
-    },
+      framesMax: 6
+    }
   },
+  attackBox: {
+    offset: { x: 60, y: 40 },
+    width: 170,
+    height: 50
+  }
 });
 
 const enemy = new Fighter({
   position: {
-    x: 400,
-    y: 100,
+    x: 800,
+    y: 0
   },
   velocity: {
     x: 0,
-    y: 10,
+    y: 10
   },
   colour: `blue`,
   offset: {
-    x: -50,
-    y: 0,
+    x: 0,
+    y: 0
   },
+  imageSrc: "./img/warriorNicole/Idle.png",
+  framesMax: 4,
+  scale: 2.5,
+  offset: {
+    x: 200,
+    y: 157
+  },
+  sprites: {
+    idle: {
+      imageSrc: "./img/warriorNicole/Idle.png",
+      framesMax: 4
+    },
+    run: {
+      imageSrc: "./img/warriorNicole/Run.png",
+      framesMax: 8
+    },
+    jump: {
+      imageSrc: "./img/warriorNicole/Jump.png",
+      framesMax: 2
+    },
+    attack1: {
+      imageSrc: "./img/warriorNicole/Attack1.png",
+      framesMax: 4
+    }
+  },
+  takeHit: {
+    imageSrc: `.img/warriorNicole/Take hit.png`,
+    framesMax: 3
+  },
+  attackBox: {
+    offset: { x: -180, y: 40 },
+    width: 170,
+    height: 50
+  }
 });
 
 const keys = {
   a: {
-    pressed: false,
+    pressed: false
   },
   d: {
-    pressed: false,
+    pressed: false
   },
   ArrowLeft: {
-    pressed: false,
+    pressed: false
   },
   ArrowRight: {
-    pressed: false,
-  },
+    pressed: false
+  }
 };
 
 decreaseTimer();
@@ -107,7 +146,7 @@ function animate() {
   background.update();
   shop.update();
   player.update();
-  // enemy.update();
+  enemy.update();
 
   player.velocity.x = 0;
   enemy.velocity.x = 0;
@@ -128,35 +167,54 @@ function animate() {
   }
 
   //enemy movement
+  enemy.switchSprite(`idle`);
   if (keys.ArrowLeft.pressed && enemy.lastKey === `ArrowLeft`) {
+    enemy.switchSprite(`run`);
     enemy.velocity.x = -5;
   } else if (keys.ArrowRight.pressed && enemy.lastKey === `ArrowRight`) {
+    enemy.switchSprite(`run`);
     enemy.velocity.x = 5;
   }
+  if (enemy.velocity.y < 0) {
+    enemy.switchSprite(`jump`);
+  }
+
   //detect for player colission
   if (
     rectangularCollission({
       rectangle1: player,
-      rectangle2: enemy,
+      rectangle2: enemy
     }) &&
-    player.isAttacking
+    player.isAttacking &&
+    player.framesCurrent === 4
   ) {
     player.isAttacking = false;
     enemy.health -= 20;
     document.querySelector(`#enemyHealth`).style.width = enemy.health + `%`;
   }
+  // if player misses
+  if (player.isAttacking && player.framesCurrent === 4) {
+    player.isAttacking = false;
+  }
   //detect for enemy colission
   if (
     rectangularCollission({
       rectangle1: enemy,
-      rectangle2: player,
+      rectangle2: player
     }) &&
-    enemy.isAttacking
+    enemy.isAttacking &&
+    enemy.framesCurrent === 2
   ) {
     enemy.isAttacking = false;
     player.health -= 20;
     document.querySelector(`#playerHealth`).style.width = player.health + `%`;
   }
+  // enemy misses
+  // if player misses
+  if (enemy.isAttacking && enemy.framesCurrent === 2) {
+    enemy.isAttacking = false;
+  }
+
   if ((player.health <= 0) | (enemy.health <= 0)) {
     determineWinner({ player, enemy, timerID });
   }
