@@ -28,7 +28,7 @@ const shop = new Sprite({
 
 const player = new Fighter({
   position: {
-    x: 0,
+    x: 20,
     y: 0
   },
   velocity: {
@@ -82,7 +82,7 @@ const player = new Fighter({
 
 const enemy = new Fighter({
   position: {
-    x: 800,
+    x: 910,
     y: 0
   },
   velocity: {
@@ -168,10 +168,14 @@ function animate() {
   //player movement
   player.switchSprite(`idle`);
 
-  if (keys.a.pressed && player.lastKey === `a`) {
+  if (keys.a.pressed && player.lastKey === `a` && player.position.x > 0) {
     player.velocity.x = -5;
     player.switchSprite(`run`);
-  } else if (keys.d.pressed && player.lastKey === `d`) {
+  } else if (
+    keys.d.pressed &&
+    player.lastKey === `d` &&
+    player.position.x < canvas.width - 100
+  ) {
     player.switchSprite(`run`);
     player.velocity.x = 5;
   }
@@ -182,10 +186,18 @@ function animate() {
 
   //enemy movement
   enemy.switchSprite(`idle`);
-  if (keys.ArrowLeft.pressed && enemy.lastKey === `ArrowLeft`) {
+  if (
+    keys.ArrowLeft.pressed &&
+    enemy.lastKey === `ArrowLeft` &&
+    enemy.position.x > 0
+  ) {
     enemy.switchSprite(`run`);
     enemy.velocity.x = -5;
-  } else if (keys.ArrowRight.pressed && enemy.lastKey === `ArrowRight`) {
+  } else if (
+    keys.ArrowRight.pressed &&
+    enemy.lastKey === `ArrowRight` &&
+    enemy.position.x < canvas.width - 100
+  ) {
     enemy.switchSprite(`run`);
     enemy.velocity.x = 5;
   }
