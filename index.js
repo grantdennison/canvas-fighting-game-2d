@@ -141,10 +141,16 @@ const keys = {
   d: {
     pressed: false
   },
+  s: {
+    pressed: false
+  },
   ArrowLeft: {
     pressed: false
   },
   ArrowRight: {
+    pressed: false
+  },
+  ArrowDown: {
     pressed: false
   }
 };
@@ -275,7 +281,10 @@ window.addEventListener(`keydown`, (event) => {
         }
         break;
       case `s`:
-        if (timer > 0) player.attack();
+        if (timer > 0 && !keys.s.pressed) {
+          keys.s.pressed = true;
+          player.attack();
+        }
         break;
     }
   }
@@ -301,7 +310,11 @@ window.addEventListener(`keydown`, (event) => {
         }
         break;
       case `ArrowDown`:
-        if (timer > 0) enemy.attack();
+        if (timer > 0 && !keys.ArrowDown.pressed) {
+          keys.ArrowDown.pressed = true;
+          enemy.attack();
+        }
+
         break;
     }
   }
@@ -315,6 +328,11 @@ window.addEventListener(`keyup`, (event) => {
     case `a`:
       keys.a.pressed = false;
       break;
+
+    case `s`:
+      keys.s.pressed = false;
+      break;
+
     //enemy keys
     case `ArrowRight`:
       keys.ArrowRight.pressed = false;
@@ -322,6 +340,10 @@ window.addEventListener(`keyup`, (event) => {
 
     case `ArrowLeft`:
       keys.ArrowLeft.pressed = false;
+      break;
+
+    case `ArrowDown`:
+      keys.ArrowDown.pressed = false;
       break;
   }
 });
