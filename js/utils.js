@@ -28,7 +28,7 @@ function determineWinner({ player, enemy, timerID }) {
   reset.style.display = `flex`;
 }
 
-let timer = 1;
+let timer = 20;
 let timerID;
 function decreaseTimer() {
   if (timer > 0) {
@@ -44,7 +44,7 @@ function decreaseTimer() {
 function resetGame() {
   displayText.style.display = `none`;
   reset.style.display = `none`;
-  timer = 10;
+  timer = 20;
   player.health = 100;
   enemy.health = 100;
   player.position.x = 20;
