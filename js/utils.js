@@ -1,3 +1,5 @@
+document.querySelector("#reset").addEventListener(`click`, resetGame);
+
 function rectangularCollission({ rectangle1, rectangle2 }) {
   if (
     rectangle1.attackBox.position.x + rectangle1.attackBox.width >=
@@ -23,9 +25,10 @@ function determineWinner({ player, enemy, timerID }) {
   } else {
     displayText.innerHTML = `Player 2 Winner`;
   }
+  reset.style.display = `flex`;
 }
 
-let timer = 20;
+let timer = 1;
 let timerID;
 function decreaseTimer() {
   if (timer > 0) {
@@ -36,4 +39,29 @@ function decreaseTimer() {
   if (timer === 0) {
     determineWinner({ player, enemy });
   }
+}
+
+function resetGame() {
+  displayText.style.display = `none`;
+  reset.style.display = `none`;
+  timer = 10;
+  player.health = 100;
+  enemy.health = 100;
+  player.position.x = 20;
+  enemy.position.x = 930;
+  player.position.y = 0;
+  enemy.position.y = 0;
+  player.dead = false;
+  enemy.dead = false;
+  gsap.to(`#enemyHealth`, {
+    width: enemy.health + `%`
+  });
+  gsap.to(`#playerHealth`, {
+    width: player.health + `%`
+  });
+  player.image = player.sprites.idle.image;
+  player.framesMax = player.sprites.idle.framesMax;
+  enemy.image = enemy.sprites.idle.image;
+  enemy.framesMax = enemy.sprites.idle.framesMax;
+  decreaseTimer();
 }

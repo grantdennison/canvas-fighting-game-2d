@@ -136,12 +136,10 @@ class Fighter extends Sprite {
       return;
     }
     // overiding all other animation when attacked
-    console.log(this.framesCurrent, this.sprites.attack1.framesMax - 1);
     if (
       this.image === this.sprites.attack1.image &&
       this.framesCurrent < this.sprites.attack1.framesMax - 1
     ) {
-      console.log(`attack1`);
       return;
     }
     //overide when fighter get hit
